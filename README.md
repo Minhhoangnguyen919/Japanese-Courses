@@ -138,3 +138,4 @@ The application uses the following main tables:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details. # Japanese-Courses
+# Japanese-Courses
