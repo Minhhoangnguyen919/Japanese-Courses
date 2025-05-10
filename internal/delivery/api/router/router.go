@@ -2,10 +2,12 @@ package router
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	v1 "github.com/nguyenminhhoang/JapaneseCourses/internal/delivery/api/v1"
 	v2 "github.com/nguyenminhhoang/JapaneseCourses/internal/delivery/api/v2"
 	"github.com/nguyenminhhoang/JapaneseCourses/internal/domain"
 	"github.com/nguyenminhhoang/JapaneseCourses/internal/infrastructure/auth"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 // Router represents the API router
@@ -15,13 +17,23 @@ type Router struct {
 
 // NewRouter creates a new router instance
 func NewRouter() *Router {
+	e := echo.New()
+
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
+
 	return &Router{
-		echo: echo.New(),
+		echo: e,
 	}
 }
 
 // RegisterRoutes registers all API routes
 func (r *Router) RegisterRoutes(userUseCase domain.UserUseCase, vocabularyUseCase domain.VocabularyUseCase) {
+	// Swagger documentation
+	r.echo.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	// API v1
 	v1Group := r.echo.Group("/api/v1")
 	{

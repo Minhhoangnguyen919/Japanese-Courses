@@ -3,11 +3,10 @@ package v2
 import (
 	"net/http"
 
+	"github.com/labstack/echo/v4"
 	"github.com/nguyenminhhoang/JapaneseCourses/internal/domain"
 	"github.com/nguyenminhhoang/JapaneseCourses/internal/infrastructure/auth"
 	"github.com/nguyenminhhoang/JapaneseCourses/internal/models"
-
-	"github.com/labstack/echo/v4"
 )
 
 type UserHandler struct {
@@ -23,7 +22,7 @@ func NewUserHandler(userUseCase domain.UserUseCase) *UserHandler {
 	}
 }
 
-// RegisterRoutes registers the user routes
+// Register registers the user routes
 func (h *UserHandler) Register(g *echo.Group) {
 	users := g.Group("/users")
 	{
@@ -38,6 +37,17 @@ type loginRequest struct {
 	DeviceID string `json:"device_id"` // New field in v2
 }
 
+// @Summary User login
+// @Description Authenticate user and return JWT token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body loginRequest true "Login credentials"
+// @Success 200 {object} map[string]interface{} "Login successful"
+// @Failure 400 {object} map[string]string "Invalid request"
+// @Failure 401 {object} map[string]string "Invalid credentials"
+// @Failure 500 {object} map[string]string "Server error"
+// @Router /users/auth/login [post]
 func (h *UserHandler) Login(c echo.Context) error {
 	var req loginRequest
 	if err := c.Bind(&req); err != nil {
@@ -78,6 +88,16 @@ type registerRequest struct {
 	FullName string `json:"full_name"`
 }
 
+// @Summary Register new user
+// @Description Create a new user account
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body registerRequest true "User registration data"
+// @Success 201 {object} map[string]interface{} "User created successfully"
+// @Failure 400 {object} map[string]string "Invalid request"
+// @Failure 500 {object} map[string]string "Server error"
+// @Router /users/auth/register [post]
 func (h *UserHandler) RegisterUser(c echo.Context) error {
 	var req registerRequest
 	if err := c.Bind(&req); err != nil {
