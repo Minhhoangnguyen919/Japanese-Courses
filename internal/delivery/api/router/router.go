@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/nguyenminhhoang/JapaneseCourses/internal/delivery/api"
+	v1 "github.com/nguyenminhhoang/JapaneseCourses/internal/delivery/api/v1"
 	v2 "github.com/nguyenminhhoang/JapaneseCourses/internal/delivery/api/v2"
 	"github.com/nguyenminhhoang/JapaneseCourses/internal/domain"
 	"github.com/nguyenminhhoang/JapaneseCourses/internal/infrastructure/auth"
@@ -25,8 +25,8 @@ func (r *Router) RegisterRoutes(userUseCase domain.UserUseCase, vocabularyUseCas
 	// API v1
 	v1Group := r.echo.Group("/api/v1")
 	{
-		userHandlerV1 := api.NewUserHandler(userUseCase)
-		userHandlerV1.RegisterRoutes(v1Group)
+		userHandlerV1 := v1.NewUserHandler(userUseCase)
+		userHandlerV1.Register(v1Group)
 	}
 
 	// API v2

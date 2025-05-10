@@ -1,13 +1,11 @@
-package api
+package v1
 
 import (
 	"net/http"
 
-	"github.com/nguyenminhhoang/JapaneseCourses/internal/models"
-
-	"github.com/nguyenminhhoang/JapaneseCourses/internal/domain"
-
 	"github.com/labstack/echo/v4"
+	"github.com/nguyenminhhoang/JapaneseCourses/internal/domain"
+	"github.com/nguyenminhhoang/JapaneseCourses/internal/models"
 )
 
 type UserHandler struct {
@@ -21,7 +19,7 @@ func NewUserHandler(userUseCase domain.UserUseCase) *UserHandler {
 	}
 }
 
-// RegisterRoutes registers the user routes
+// Register registers the user routes
 func (h *UserHandler) Register(g *echo.Group) {
 	users := g.Group("/users")
 	{
@@ -67,13 +65,13 @@ func (h *UserHandler) RegisterUser(c echo.Context) error {
 		})
 	}
 
-	user := &domain.User{
+	user := &models.User{
 		Username: req.Username,
 		Password: req.Password,
 		Email:    req.Email,
 	}
 
-	if err := h.userUseCase.Register((*models.User)(user)); err != nil {
+	if err := h.userUseCase.Register(user); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
 			"error": err.Error(),
 		})
